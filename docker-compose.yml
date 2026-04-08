@@ -1,0 +1,27 @@
+services:
+  tracyhill-rp:
+    container_name: tracyhill-rp
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data:/app/data
+    # Optional: create .env for secrets (SendGrid, agent proxies, etc.)
+    # Uncomment the next two lines if you have a .env file:
+    # env_file:
+    #   - .env
+    environment:
+      - NODE_ENV=production
+      # Set TRUST_PROXY=true if behind a reverse proxy (enables secure cookies)
+      - TRUST_PROXY=false
+      # ALLOWED_IPS — comma-separated IPs allowed to connect (direct TCP peer)
+      # Default "*" allows all connections (suitable for local/development use)
+      # For production behind a reverse proxy, set to your proxy's IP(s)
+      - ALLOWED_IPS=*
+      # SENDGRID_API_KEY, EMAIL_FROM, EMAIL_FROM_NAME — set in .env for MFA/registration
+      # CLAUDE_CODE_HOST, CLAUDE_CODE_PORT, CLAUDE_CODE_SECRET — set in .env for agent proxy
+      # CODEX_HOST, CODEX_PORT, CODEX_SECRET — set in .env for agent proxy
+      # CLAUDE_CODE_CA_PATH, CODEX_CA_PATH — set in .env for agent TLS certs
+      # MFA_TRUST_DAYS=30
+      # PORT=3000

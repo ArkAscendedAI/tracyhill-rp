@@ -1,0 +1,50 @@
+import { expect, test } from "@playwright/test";
+
+test("resets a password through forgot-password verification", async ({ page }) => {
+  const suffix = Date.now();
+  const username = `reset_${suffix}`;
+  const email = `reset_${suffix}@example.com`;
+  const password = "DemoPass9A";
+  const resetPasswordValue = "ResetPass9A";
+
+  await page.goto("/register");
+  await page.getByLabel("Register username").fill(username);
+  await page.getByLabel("Register email").fill(email);
+  await page.getByLabel("Register password").fill(password);
+  await page.getByLabel("Register confirm password").fill(password);
+  await page.getByLabel("Agree to terms").check();
+  await page.getByRole("button", { name: "Create Account" }).click();
+  await expect(page.getByRole("heading", { name: "Verify Email" })).toBeVisible();
+  const registrationCodeText = await page.getByLabel("Development verification code").textContent();
+  const registrationCode = registrationCodeText?.match(/\d{6}/)?.[0];
+  if (!registrationCode) throw new Error("registration verification code not found");
+  await page.getByLabel("Registration verification code").fill(registrationCode);
+  await page.getByRole("button", { name: "Verify And Sign In" }).click();
+  await expect(page.getByRole("heading", { name: "Workspace" })).toBeVisible();
+  await page.getByRole("button", { name: "Log Out" }).click();
+
+  await page.goto("/forgot-password");
+  await page.getByLabel("Forgot password username").fill(username);
+  await page.getByRole("button", { name: "Send Reset Code" }).click();
+  await expect(page.getByLabel("Password reset verification code")).toBeVisible();
+  const resetCodeText = await page.getByLabel("Development password reset code").textContent();
+  const resetCode = resetCodeText?.match(/\d{6}/)?.[0];
+  if (!resetCode) throw new Error("password reset code not found");
+  await page.getByLabel("Password reset verification code").fill(resetCode);
+  await page.getByRole("button", { name: "Verify Code" }).click();
+  await expect(page.getByLabel("Forgot password new password")).toBeVisible();
+  await page.getByLabel("Forgot password new password").fill(resetPasswordValue);
+  await page.getByLabel("Forgot password confirm password").fill(resetPasswordValue);
+  await page.getByRole("button", { name: "Reset Password" }).click();
+  await expect(page.getByRole("button", { name: "Log In" })).toBeVisible();
+  await page.getByLabel("Username").fill(username);
+  await page.getByLabel("Password").fill(resetPasswordValue);
+  await page.getByRole("button", { name: "Log In" }).click();
+  await expect(page.getByRole("heading", { name: "Two-Step Verification" })).toBeVisible();
+  const mfaCodeText = await page.getByLabel("Development MFA code").textContent();
+  const mfaCode = mfaCodeText?.match(/\d{6}/)?.[0];
+  if (!mfaCode) throw new Error("mfa verification code not found");
+  await page.getByLabel("MFA verification code").fill(mfaCode);
+  await page.getByRole("button", { name: "Verify And Sign In" }).click();
+  await expect(page.getByRole("heading", { name: "Workspace" })).toBeVisible();
+});

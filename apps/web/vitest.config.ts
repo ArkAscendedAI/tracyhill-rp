@@ -1,0 +1,12 @@
+import { defineConfig } from "vitest/config";
+
+export default defineConfig({
+  test: {
+    exclude: [
+      "e2e/**",
+      "playwright.config.ts",
+      "node_modules/**",
+      "dist/**",
+    ],
+  },
+});

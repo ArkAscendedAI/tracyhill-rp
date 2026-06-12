@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2129;
+  --surface-border: #30363d;
+  --text: #e6edf3;
+  --text2: #8b949e;
+  --muted: #8b949e;
+  --accent: #58a6ff;
+  --danger: #f85149;
+  --green: #3fb950;
+  --amber: #d29922;
+  --warning: var(--amber);
+  --red: #f85149;
+  --pink: #f778ba;
+  --purple: #bc8cff;
+  --msg-font-size: 14.5px;
+}

@@ -1,0 +1,12 @@
+{
+  "name": "codex-agent-service",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "build": "node -e \"\"",
+    "typecheck": "node -e \"\"",
+    "test": "node -e \"\""
+  }
+}

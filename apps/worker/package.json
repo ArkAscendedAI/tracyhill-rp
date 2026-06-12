@@ -1,0 +1,18 @@
+{
+  "name": "@tracyhill-rp/worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc --noEmit -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@tracyhill-rp/contracts": "0.0.0",
+    "@tracyhill-rp/db": "0.0.0",
+    "@tracyhill-rp/logging": "0.0.0",
+    "@tracyhill-rp/provider-runtime": "0.0.0"
+  }
+}

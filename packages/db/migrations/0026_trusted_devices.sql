@@ -1,0 +1,1 @@
+ALTER TABLE users ADD COLUMN trusted_devices TEXT NOT NULL DEFAULT '[]';

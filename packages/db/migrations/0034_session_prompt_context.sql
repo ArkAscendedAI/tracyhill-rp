@@ -1,0 +1,2 @@
+ALTER TABLE sessions ADD COLUMN system_prompt TEXT NOT NULL DEFAULT '';
+ALTER TABLE sessions ADD COLUMN state_seed TEXT NOT NULL DEFAULT '';

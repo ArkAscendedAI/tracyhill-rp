@@ -1,0 +1,25 @@
+{
+  "name": "@tracyhill-rp/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc --noEmit -p tsconfig.json",
+    "import:v1": "tsx src/importer/cli.ts",
+    "seed:imported-fixture": "tsx src/importer/seedImportedFixture.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@tracyhill-rp/contracts": "0.0.0",
+    "@tracyhill-rp/db": "0.0.0",
+    "@tracyhill-rp/logging": "0.0.0",
+    "@tracyhill-rp/model-catalog": "0.0.0",
+    "@tracyhill-rp/provider-runtime": "0.0.0",
+    "@tracyhill-rp/test-fixtures": "0.0.0",
+    "bcryptjs": "^2.4.3",
+    "express": "^4.21.0",
+    "express-session": "^1.18.0"
+  }
+}

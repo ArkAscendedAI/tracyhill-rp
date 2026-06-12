@@ -1,0 +1,25 @@
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+
+export const pendingAssistantMessages = sqliteTable("pending_assistant_messages", {
+  id: text("id").primaryKey(),
+  sessionId: text("session_id").notNull(),
+  userId: text("user_id").notNull(),
+  sourceUserMessageId: text("source_user_message_id").notNull(),
+  modelId: text("model_id").notNull(),
+  content: text("content").notNull(),
+  thinking: text("thinking"),
+  inputTokens: integer("input_tokens"),
+  outputTokens: integer("output_tokens"),
+  totalTokens: integer("total_tokens"),
+  cacheReadTokens: integer("cache_read_tokens"),
+  cacheWriteTokens: integer("cache_write_tokens"),
+  reasoningTokens: integer("reasoning_tokens"),
+  stopReason: text("stop_reason"),
+  stopDetailsJson: text("stop_details_json"),
+  fastMode: integer("fast_mode", { mode: "boolean" }).notNull().default(false),
+  servedModel: text("served_model"),
+  sceneData: text("scene_data"),
+  overheadJson: text("overhead_json"),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});

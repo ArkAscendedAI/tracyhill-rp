@@ -1,0 +1,116 @@
+x-tracyhill-common: &tracyhill-common
+  build:
+    context: .
+    target: runtime
+  restart: unless-stopped
+  env_file:
+    - .env
+  volumes:
+    - ./data:/app/data
+  environment:
+    NODE_ENV: production
+    DB_FILE: ${DB_FILE:-/app/data/v2/tracyhill-rp-v2.sqlite}
+    IMAGE_DIR: ${IMAGE_DIR:-/app/data/v2/images}
+    LOG_LEVEL: ${LOG_LEVEL:-info}
+    ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+    GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+    OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    XAI_API_KEY: ${XAI_API_KEY:-}
+    ZAI_API_KEY: ${ZAI_API_KEY:-}
+    SENDGRID_API_KEY: ${SENDGRID_API_KEY:-}
+    EMAIL_FROM: ${EMAIL_FROM:-noreply@example.com}
+    EMAIL_FROM_NAME: ${EMAIL_FROM_NAME:-TracyHill RP}
+    CLAUDE_CODE_HOST: ${CLAUDE_CODE_HOST:-}
+    CLAUDE_CODE_PORT: ${CLAUDE_CODE_PORT:-7700}
+    CLAUDE_CODE_SECRET: ${CLAUDE_CODE_SECRET:-}
+    CLAUDE_CODE_CA_PATH: ${CLAUDE_CODE_CA_PATH:-}
+    CLAUDE_CODE_SERVERNAME: ${CLAUDE_CODE_SERVERNAME:-claude-agent}
+    CODEX_HOST: ${CODEX_HOST:-}
+    CODEX_PORT: ${CODEX_PORT:-7701}
+    CODEX_SECRET: ${CODEX_SECRET:-}
+    CODEX_CA_PATH: ${CODEX_CA_PATH:-}
+    CODEX_SERVERNAME: ${CODEX_SERVERNAME:-codex-agent}
+    MOCK_PROVIDER: ${MOCK_PROVIDER:-0}
+  logging:
+    driver: json-file
+    options:
+      max-size: ${DOCKER_LOG_MAX_SIZE:-10m}
+      max-file: "${DOCKER_LOG_MAX_FILE:-5}"
+
+services:
+  tracyhill-rp:
+    <<: *tracyhill-common
+    container_name: tracyhill-rp
+    command: npm run start:api
+    ports:
+      - "${HOST_PORT:-3000}:${PORT:-3000}"
+    environment:
+      NODE_ENV: production
+      PORT: ${PORT:-3000}
+      DB_FILE: ${DB_FILE:-/app/data/v2/tracyhill-rp-v2.sqlite}
+      IMAGE_DIR: ${IMAGE_DIR:-/app/data/v2/images}
+      WEB_DIST_DIR: ${WEB_DIST_DIR:-/app/apps/web/dist}
+      SESSION_SECRET: ${SESSION_SECRET:?SESSION_SECRET is required}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      INLINE_WORKERS: ${INLINE_WORKERS:-0}
+      TRUST_PROXY: ${TRUST_PROXY:-false}
+      ALLOWED_IPS: ${ALLOWED_IPS:-*}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      XAI_API_KEY: ${XAI_API_KEY:-}
+      ZAI_API_KEY: ${ZAI_API_KEY:-}
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY:-}
+      EMAIL_FROM: ${EMAIL_FROM:-noreply@example.com}
+      EMAIL_FROM_NAME: ${EMAIL_FROM_NAME:-TracyHill RP}
+      CLAUDE_CODE_HOST: ${CLAUDE_CODE_HOST:-}
+      CLAUDE_CODE_PORT: ${CLAUDE_CODE_PORT:-7700}
+      CLAUDE_CODE_SECRET: ${CLAUDE_CODE_SECRET:-}
+      CLAUDE_CODE_CA_PATH: ${CLAUDE_CODE_CA_PATH:-}
+      CLAUDE_CODE_SERVERNAME: ${CLAUDE_CODE_SERVERNAME:-claude-agent}
+      CODEX_HOST: ${CODEX_HOST:-}
+      CODEX_PORT: ${CODEX_PORT:-7701}
+      CODEX_SECRET: ${CODEX_SECRET:-}
+      CODEX_CA_PATH: ${CODEX_CA_PATH:-}
+      CODEX_SERVERNAME: ${CODEX_SERVERNAME:-codex-agent}
+      MOCK_PROVIDER: ${MOCK_PROVIDER:-0}
+      SEED_DEMO_USER: ${SEED_DEMO_USER:-0}
+      DEMO_USERNAME: ${DEMO_USERNAME:-demo}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-demo-pass}
+      EXPOSE_AUTH_CODES: ${EXPOSE_AUTH_CODES:-0}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:${PORT:-3000}/api/system/health >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  tracyhill-rp-worker:
+    <<: *tracyhill-common
+    container_name: tracyhill-rp-worker
+    command: npm run start:worker
+    environment:
+      NODE_ENV: production
+      DB_FILE: ${DB_FILE:-/app/data/v2/tracyhill-rp-v2.sqlite}
+      IMAGE_DIR: ${IMAGE_DIR:-/app/data/v2/images}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      PIPELINE_POLL_MS: ${PIPELINE_POLL_MS:-1000}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      XAI_API_KEY: ${XAI_API_KEY:-}
+      ZAI_API_KEY: ${ZAI_API_KEY:-}
+      CLAUDE_CODE_HOST: ${CLAUDE_CODE_HOST:-}
+      CLAUDE_CODE_PORT: ${CLAUDE_CODE_PORT:-7700}
+      CLAUDE_CODE_SECRET: ${CLAUDE_CODE_SECRET:-}
+      CLAUDE_CODE_CA_PATH: ${CLAUDE_CODE_CA_PATH:-}
+      CLAUDE_CODE_SERVERNAME: ${CLAUDE_CODE_SERVERNAME:-claude-agent}
+      CODEX_HOST: ${CODEX_HOST:-}
+      CODEX_PORT: ${CODEX_PORT:-7701}
+      CODEX_SECRET: ${CODEX_SECRET:-}
+      CODEX_CA_PATH: ${CODEX_CA_PATH:-}
+      CODEX_SERVERNAME: ${CODEX_SERVERNAME:-codex-agent}
+      MOCK_PROVIDER: ${MOCK_PROVIDER:-0}

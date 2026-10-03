@@ -5,7 +5,9 @@ import { CHAT_MODELS, DEFAULT_CHAT_MODEL_ID, getChatModel, getConfiguredDefaultM
 // Opus 4.6 when the account can use it, otherwise a model it can use. The choice is written into that first session, and
 // later sessions of the campaign inherit it. `usable` holds the provider ids the account can reach right now: its own
 // key or sign-in, a server-wide one, or the environment's (ProviderKeyService.listKeys, `configured`). DEFAULT_MODEL_ID,
-// when set, wins everywhere a default applies, as before.
+// when set, wins for an account that can use its model. An account that cannot starts as if it were unset, and every
+// background dial is written into its session, because the engine puts DEFAULT_MODEL_ID on any dial a session leaves
+// unset. With nothing usable yet there is nothing better to choose, so DEFAULT_MODEL_ID stands.
 
 /** The background dials ship with Claude subscription models; these are the same models through an Anthropic API key. */
 export const CLAUDE_DIRECT_EQUIVALENT: Readonly<Record<string, string>> = {
@@ -42,11 +44,18 @@ function fallbackCatalogModel(usable: UsableProviders): string | null {
   return null;
 }
 
+/** DEFAULT_MODEL_ID when the account can use its model, else null. */
+function usableConfiguredDefault(usable: UsableProviders): string | null {
+  const configured = getConfiguredDefaultModelId();
+  return configured && usableCatalogModel(configured, usable) ? configured : null;
+}
+
 /** The chat model a new session starts on when nobody chose one. */
 export function defaultChatModelFor(usable: UsableProviders, customModelIds: readonly string[] = []): string {
-  return getConfiguredDefaultModelId()
+  return usableConfiguredDefault(usable)
     ?? fallbackCatalogModel(usable)
     ?? customModelIds[0]
+    ?? getConfiguredDefaultModelId()
     ?? getChatModel(DEFAULT_CHAT_MODEL_ID)?.id
     ?? DEFAULT_CHAT_MODEL_ID;
 }
@@ -56,7 +65,8 @@ export function defaultChatModelFor(usable: UsableProviders, customModelIds: rea
  * cannot run: the background models (Claude through the subscription; the direct model with an Anthropic key, else the
  * session's own model when the account can use it, else a model it can use) and the embedding model (Google; else
  * OpenAI; else the local server when LOCAL_EMBEDDING_URL is set). A dial the account can run keeps its default and is
- * not written. With DEFAULT_MODEL_ID set, the chat dials follow it at read time and only the embedding model is checked.
+ * not written. With DEFAULT_MODEL_ID set and usable, the chat dials follow it at read time and only the embedding model
+ * is checked; set but not usable, every chat dial is written, since the read-time default would put it there.
  */
 export function startingModelOverrides(
   usable: UsableProviders,
@@ -65,11 +75,15 @@ export function startingModelOverrides(
 ): Record<string, string> {
   const shipped = contextSettingsSchema.parse({}) as Record<string, unknown>;
   const overrides: Record<string, string> = {};
-  if (!getConfiguredDefaultModelId()) {
+  const configured = getConfiguredDefaultModelId();
+  if (!usableConfiguredDefault(usable)) {
     const fallback = usableCatalogModel(composerModelId, usable) ? composerModelId : fallbackCatalogModel(usable);
     for (const dial of CONTEXT_DEFAULT_MODEL_DIALS) {
       const shippedModel = String(shipped[dial] ?? "");
-      if (!shippedModel || usableCatalogModel(shippedModel, usable)) continue;
+      if (shippedModel && usableCatalogModel(shippedModel, usable)) {
+        if (configured) overrides[dial] = shippedModel;
+        continue;
+      }
       const direct = CLAUDE_DIRECT_EQUIVALENT[shippedModel];
       if (direct && usableCatalogModel(direct, usable)) overrides[dial] = direct;
       else if (fallback) overrides[dial] = fallback;

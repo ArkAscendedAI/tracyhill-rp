@@ -1,7 +1,20 @@
 # Changelog
 
-All notable changes to TracyHill RP are recorded here, newest release first. The 2.0.0 section uses the Keep a
-Changelog headings (Added, Changed, Fixed, Security, Removed).
+All notable changes to TracyHill RP are recorded here, newest release first. The 2.x sections use the Keep a Changelog
+headings (Added, Changed, Fixed, Security, Removed).
+
+## 2.0.1 — Default Model for Every Account
+
+Published 2026-10-02.
+
+### Fixed
+
+- **`DEFAULT_MODEL_ID` applies only to the accounts that can use its model.** On a server where it names a Claude
+  sign-in model, for example, an account with only an OpenAI key started new sessions on that model and could not run
+  them, nor the background helpers that took the same model. Such an account now starts the way it would on a server
+  without the variable (Claude Opus 4.6 when it can use it, otherwise a model it can use), every helper and worker dial
+  is written into its session, and the wizard and the lorebook import preselect a model it has. Accounts that can use
+  the model see no change.
 
 ## 2.0.0 — Living World, First-Run Setup and Subscription Sign-ins
 

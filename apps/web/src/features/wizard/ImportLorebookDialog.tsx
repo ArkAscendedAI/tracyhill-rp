@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { importWizardRunRequestSchema } from "@tracyhill-rp/contracts";
 
-import { buildAvailableChatModels, getProviderKeys } from "../auth/providerKeyApi";
+import { buildAvailableChatModels, getProviderKeys, usableDefaultModelId } from "../auth/providerKeyApi";
 import { stringMaxLength } from "../lorebook/contractBounds";
 import { AutoTextarea } from "../../shared/ui/AutoTextarea";
 import { Dialog } from "../../shared/ui/Dialog";
@@ -39,8 +39,9 @@ export function ImportLorebookDialog({ open, wizardBusy, onClose, onImported }: 
   const [addCharacterSections, setAddCharacterSections] = useState(true);
   const providerConfig = useQuery({ queryKey: ["provider-keys"], queryFn: getProviderKeys, enabled: open });
   const models = buildAvailableChatModels(providerConfig.data);
-  // The owner's pick, else the deployment's default model, else the first model with a key (the wizard's rule).
-  const modelId = modelIdRaw ?? providerConfig.data?.defaultModelOverride ?? models[0]?.id ?? "";
+  // The owner's pick, else the deployment's default model when this account can run it, else the first model with a key
+  // (the wizard's rule).
+  const modelId = modelIdRaw ?? usableDefaultModelId(providerConfig.data, models) ?? models[0]?.id ?? "";
   const mutation = useMutation({
     mutationFn: importWizardRun,
     onSuccess: (response) => onImported(response.runId),

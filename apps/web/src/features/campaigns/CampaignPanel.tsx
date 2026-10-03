@@ -12,7 +12,7 @@ import { QueryError } from "../../shared/ui/QueryError";
 import { overLimitMessage } from "../../shared/text/lengthCap";
 import { stringMaxLength } from "../lorebook/contractBounds";
 
-import { buildAvailableChatModels, getProviderKeys } from "../auth/providerKeyApi";
+import { buildAvailableChatModels, getProviderKeys, usableDefaultModelId } from "../auth/providerKeyApi";
 import { createCampaign, deleteCampaign, getCampaignVersions, restoreCampaignVersion, updateCampaign } from "./campaignApi";
 import { cancelPipelineRun, getPipelineRuns } from "../pipeline/pipelineApi";
 import { CampaignAuditDialog } from "../pipeline/CampaignAuditDialog";
@@ -87,12 +87,12 @@ export function CampaignPanel({ open, onClose }: CampaignPanelProps) {
   const [wizardTemplateServerChanged, setWizardTemplateServerChanged] = useState(false);
   const [wizardCampaignName, setWizardCampaignName] = useState("");
   // null = the user hasn't picked yet; the effective value falls through to the
-  // deployment DEFAULT_MODEL_ID override (from the provider-keys bootstrap, which
-  // may arrive after mount) and then the first available model. Empty when no
-  // model is keyed — Run Wizard is disabled rather than pinning a literal id
-  // the server would reject.
+  // deployment DEFAULT_MODEL_ID override when this account can run it (from the
+  // provider-keys bootstrap, which may arrive after mount) and then the first
+  // available model. Empty when no model is keyed — Run Wizard is disabled rather
+  // than pinning a literal id the server would reject.
   const [wizardModelIdRaw, setWizardModelId] = useState<string | null>(null);
-  const wizardModelId = wizardModelIdRaw ?? providerConfig.data?.defaultModelOverride ?? availableChatModels[0]?.id ?? "";
+  const wizardModelId = wizardModelIdRaw ?? usableDefaultModelId(providerConfig.data, availableChatModels) ?? availableChatModels[0]?.id ?? "";
   const [wizardBrief, setWizardBrief] = useState("");
   const [wizardTranscript, setWizardTranscript] = useState("");
   const [reviewingWizardRunId, setReviewingWizardRunId] = useState<string | null>(null);

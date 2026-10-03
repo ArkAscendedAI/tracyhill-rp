@@ -6,6 +6,8 @@ TracyHill RP is built around the way long-form roleplay works: persistent campai
 
 The server makes every provider call, so provider keys never reach the browser. It is SQLite-backed, deploys with Docker and is MIT licensed. `docker compose up -d` on a fresh clone gives a working instance, and a first-run setup page creates your administrator account.
 
+**Try it first:** [rp.tracyhill.net](https://rp.tracyhill.net) runs the current release. Create an account, then add your own API key or connect your Claude or ChatGPT subscription under **Options → Providers**.
+
 ---
 
 ## Feature Tour
@@ -272,7 +274,7 @@ Sign-up, two-step sign-in, email, shared keys, the daily sign-out time and the s
 | **Email** (optional; usually set in Admin: Server settings → Email) | `SENDGRID_API_KEY`, `EMAIL_FROM`, `EMAIL_FROM_NAME` |
 | **Development only** (never on a server other people reach) | `SEED_DEMO_USER`, `DEMO_USERNAME`, `DEMO_PASSWORD`, `MOCK_PROVIDER`, `EXPOSE_AUTH_CODES` |
 
-A new session starts on Claude Opus 4.6 when the account can use it (through an Anthropic key or a Claude sign-in), and its context helpers and background workers on the Claude models their Engine-panel dials ship with. When the account cannot use those, a session that has no earlier session of its campaign to inherit from starts on a model the account can use instead, its helper and worker dials follow the same rule, and its retrieval embeddings move from Google's `gemini-embedding-2` to OpenAI's (or to a local embeddings server when `LOCAL_EMBEDDING_URL` is set). Later sessions of a campaign inherit the first session's choices, every dial can be changed in the Engine panel, and `DEFAULT_MODEL_ID` replaces the chat defaults everywhere. [`ENVIRONMENT.md`](ENVIRONMENT.md) lists the order a fallback model is chosen in.
+A new session starts on Claude Opus 4.6 when the account can use it (through an Anthropic key or a Claude sign-in), and its context helpers and background workers on the Claude models their Engine-panel dials ship with. When the account cannot use those, a session that has no earlier session of its campaign to inherit from starts on a model the account can use instead, its helper and worker dials follow the same rule, and its retrieval embeddings move from Google's `gemini-embedding-2` to OpenAI's (or to a local embeddings server when `LOCAL_EMBEDDING_URL` is set). Later sessions of a campaign inherit the first session's choices, every dial can be changed in the Engine panel, and `DEFAULT_MODEL_ID` replaces the chat defaults for every account that can use its model. [`ENVIRONMENT.md`](ENVIRONMENT.md) lists the order a fallback model is chosen in.
 
 ---
 

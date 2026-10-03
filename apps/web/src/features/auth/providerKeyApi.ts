@@ -53,6 +53,13 @@ export function buildAvailableChatModels(config?: ProviderKeyListResponse | null
   ] as AvailableChatModel[];
 }
 
+/** The deployment's default model (DEFAULT_MODEL_ID) when it is among this account's models, else null, so a picker
+ *  that falls back to it never preselects a model the account cannot run. */
+export function usableDefaultModelId(config: ProviderKeyListResponse | null | undefined, models: ReadonlyArray<{ id: string }>): string | null {
+  const configured = config?.defaultModelOverride ?? null;
+  return configured && models.some((model) => model.id === configured) ? configured : null;
+}
+
 /** Resolve the saved selection even after its key was removed. Never substitute a different model. */
 export function getSavedChatModel(modelId: string | null, config?: ProviderKeyListResponse | null): AvailableChatModel | null {
   if (!modelId) return null;

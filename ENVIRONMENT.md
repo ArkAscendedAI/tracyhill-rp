@@ -400,6 +400,11 @@ A deployment-wide default chat model. When it names a chat model in the app's ca
 default wherever a default applies: new blank sessions, the campaign wizard's model picker, and the model every
 automated worker or helper falls back to. Explicit session, wizard and job choices still win.
 
+It applies to the accounts that can use its model. For an account that cannot (no key or sign-in for that model's
+provider), a new session starts as described below for a server without the variable, every helper and worker dial is
+written into the session so none of them falls back to the variable's model, and the wizard and the lorebook import
+preselect a model the account has. While an account can use no provider at all, the variable's model stands.
+
 Without it, a session that has no earlier session of its campaign to inherit from (a new campaign's first session, the
 first session of the wizard or a lorebook import, or a session outside any campaign) starts on Claude Opus 4.6 when the
 account can use it: `claude-opus-4-6` with an Anthropic key, else `claude-opus-4-6-bridge` with a Claude sign-in. When it

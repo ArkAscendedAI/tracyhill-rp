@@ -1,0 +1,122 @@
+/* Fonts: self-hosted @font-face rules live in fonts.css (imported first by main.tsx). */
+
+:root {
+  /* Dark-only app: tell the UA so native controls, <details> markers, <select> popups and
+     number spinners stop rendering in the light palette. */
+  color-scheme: dark;
+  accent-color: var(--accent);
+
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2129;
+  --surface-border: #30363d;
+  --text: #e6edf3;
+  --text2: #8b949e;
+  --muted: #8b949e;
+  --accent: #58a6ff;
+  --danger: #f85149;
+  --green: #3fb950;
+  --amber: #d29922;
+  --warning: var(--amber);
+  --red: #f85149;
+  --pink: #f778ba;
+  --purple: #bc8cff;
+  --purple-strong: #8957e5;          /* filled purple button: the empty state's New Campaign Wizard (white text ≥ 4.5:1) */
+  --purple-strong-hover: #9a6bf0;
+  --purple-glow: rgba(137, 87, 229, .45);
+  /* Secondary palette that base.css used to spell as literals. */
+  --bg-deep: #0b1016;      /* deeper-than-bg chrome: panel rail/topbar/statusbar, pipeline cards */
+  --bg-code: #0a0e14;      /* code / diff / tool-output surface */
+  --term-bg: #000;         /* Bash terminal expansion */
+  --term-fg: #c5c5c5;
+  --danger-soft: #ffb4ae;  /* idle tone of destructive text/buttons (hover → --danger/--red) */
+  --danger-wash: rgba(248, 81, 73, .08); /* faint danger background: the setup page's plain-HTTP warning, the Shared keys warnings */
+  --accent-hover: #79bcff;
+  --cyan: #38bdf8;         /* cold / archived context sources */
+  --orange: #f0883e;       /* served-by-fallback-model badge */
+  --msg-font-size: 14.5px;
+
+  /* Role tokens for the literals base.css still spelled after the secondary palette above.
+     Values are exactly the former literals — a palette change now reaches these
+     surfaces through tokens.css instead of leaving them behind. */
+  --text-on-accent: #fff;            /* text on accent / purple / green / danger fills (buttons, badges) */
+  --text-on-accent-dark: #08111d;    /* default <button> text on the accent fill */
+  --text-strong: #fff;               /* <strong> inside the transcript body */
+  --text-body: #a0aab4;              /* transcript narration (.msg-body); dialogue (.dlg) uses --text so it stands out */
+  --text-warm: #f0e6e4;              /* refusal explanation copy */
+  --text-user-turn: #c9d4e0;         /* coding-panel user turn body + spinner word */
+  --text-on-green: #051b0c;          /* thread badge text on the green fill */
+  --text-on-amber: #1a1206;          /* thread badge text on the amber fill */
+  --surface-input: #0f141b;          /* input / select / textarea / model-picker fill */
+  --surface-border-strong: #3f4d5d;  /* secondary button + model-picker border */
+  --bg-well: #0b0f14;                /* memory / attachment note wells */
+  --scrollbar-thumb-hover: #484f58;
+  --gold: #f2cc60;                   /* context-warning / model-menu over-limit copy */
+  --amber-bright: #f0b000;           /* scene-divider pulse label + validator head */
+  --amber-soft: #f3c969;             /* fast-mode toggle + badge */
+  --green-bright: #56d364;           /* roll-override armed hover + badge */
+  --purple-soft: #9d8bff;            /* user-resolved scene divider */
+  --purple-pale: #d7c1ff;            /* purple callout text */
+  --danger-pale: #ffa198;            /* refusal category chip */
+  --wizard-ready-bg: #2d1f3d;        /* wizard "ready" button family */
+  --wizard-ready-border: #6f4fa0;
+  --wizard-ready-text: #d5b8ff;
+  --wizard-ready-grad-a: #5a3d88;
+  --wizard-ready-grad-b: #8b5fc1;
+  --wizard-ready-grad-a-hover: #6b48a0;
+  --wizard-ready-grad-b-hover: #a374d6;
+  /* Code / diff palette (GitHub-dark): syntax tokens, coding-panel and transcript diffs. */
+  --code-string: #a5d6ff;
+  --code-keyword: #ff7b72;
+  --code-number: #79c0ff;
+  --code-add: #7ee787;
+  --code-del: #ff7b72;
+  --inspector-bg: #070a0e;           /* Codex inspector <pre> */
+  --inspector-fg: #c9d1d9;
+
+  /* Monospace stack. Every mono `font-family:` / `font:` in base.css uses this token
+     (mass-rewritten 2026-09-02; the earlier "adopt gradually" plan never took);
+     never spell the stack literally again. */
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* z-index layering reference. The tokenized tiers are the ones whose ORDER is a
+     correctness rule (toasts must paint over the full-screen coding panels: the toast
+     layer once sat at 1000 under the 2000 panels, hiding every global
+     mutation-error toast while ClaudeCode/Kimi/Codex was open). The rest are literals in
+     base.css / inline styles:
+       2      in-panel sticky bars (pipeline-actions-bar)
+       4–5    in-transcript sticky search bar / jump-latest pill (SessionConversation)
+       19–30  sidebar / model-menu / resize-handle (in-flow chrome)
+       40     in-flow dropdowns that must stay UNDER dialogs (pipeline queue pill)
+       50     dialog backdrops; 300 = nested dialogs inside a dialog (Campaign/Lorebook/Drives panels)
+       100    popovers (Popover.tsx), slash/at popups inside the panel
+       2000   --z-panel  full-screen coding panels (.ccp-fullscreen-root)
+       2050–2200  panel-internal overlays: mobile rail, rail menu, drawer backdrop
+       2400–2500  command palette / topmost modals
+       2800   --z-auth  session-expiry unlock overlay
+       3000   --z-toast  toast layer (Toast.tsx) — above everything
+     Keep new overlays within these bands to preserve ordering. */
+  --z-panel: 2000;
+  --z-auth: 2800;
+  --z-toast: 3000;
+
+  /* ---- Foundation scales. Additive: base.css adopts them
+     rule by rule; never hard-code a size, radius or duration
+     that one of these already names. ---- */
+  --font-sans: "DM Sans", "Segoe UI", system-ui, sans-serif;
+  --fs-2xs: 10.5px; --fs-xs: 11.5px; --fs-sm: 12.5px; --fs-md: 14px; --fs-lg: 15.5px;
+  --fs-xl: 18px; --fs-2xl: 22px; --fs-3xl: 26px;
+  --lh-tight: 1.25; --lh-body: 1.5; --lh-prose: 1.65;
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 20px; --sp-6: 24px; --sp-8: 32px; --sp-10: 40px;
+  --r-sm: 6px; --r-md: 8px; --r-lg: 12px; --r-xl: 16px; --r-pill: 999px;
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, .35);
+  --shadow-2: 0 4px 12px rgba(0, 0, 0, .4);
+  --shadow-3: 0 12px 32px rgba(0, 0, 0, .5);
+  --hairline: 1px solid var(--surface-border);
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+  --dur-fast: 120ms; --dur-base: 180ms; --dur-slow: 260ms;
+  --ease-out: cubic-bezier(.2, .7, .2, 1); --ease-in-out: cubic-bezier(.4, 0, .2, 1);
+  --text-prose: #d6dde6;                /* prose edit boxes (message edit, lorebook prose face); never the transcript body (2026-09-27) */
+  --accent-soft: rgba(88, 166, 255, .14);   /* tinted fills: active nav, duotone icon glow */
+  --glow-accent: 0 0 18px rgba(88, 166, 255, .35);
+}

@@ -1,0 +1,1 @@
+ALTER TABLE sessions ADD COLUMN temperature REAL NOT NULL DEFAULT 1;

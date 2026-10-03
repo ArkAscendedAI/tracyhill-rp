@@ -1,0 +1,357 @@
+/* Split out of base.css (2026-09-24): rules only the lazily loaded lorebook chunk
+   needs, so the shell's stylesheet stops carrying them. Imported by that feature's entry component; any class the
+   shell itself renders stayed in base.css (checked against the shell's static import graph). */
+.lorebook-dialog {
+  width: 100%;
+  height: calc(100vh - 4rem);
+  max-height: calc(100vh - 4rem);
+  display: flex;
+  flex-direction: column;
+}
+.lorebook-error {
+  padding: 6px 12px;
+  background: rgba(248, 81, 73, 0.15);
+  color: var(--danger);
+  font-size: 12px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.lorebook-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+.lorebook-list-panel {
+  width: 280px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--surface-border);
+  display: flex;
+  flex-direction: column;
+}
+.lorebook-list-toolbar {
+  padding: 8px;
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--surface-border);
+}
+.lorebook-tag-filter {
+  width: 80px;
+  font-size: 10px !important;
+  padding: 4px !important;
+}
+.lorebook-list-actions {
+  padding: 4px 8px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  border-bottom: 1px solid var(--surface-border);
+  font-size: 11px;
+}
+.lorebook-bulk-bar {
+  padding: 4px 8px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--surface-border);
+}
+.lorebook-entries-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px;
+}
+.lorebook-entry-item {
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 2px;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+}
+.lorebook-entry-item:hover { background: var(--surface2); }
+.lorebook-entry-item.disabled-entry { opacity: 0.5; }
+.lorebook-entry-info {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.lorebook-entry-name {
+  font-size: 12px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lorebook-entry-meta {
+  display: flex;
+  gap: 6px;
+  font-size: 10px;
+  align-items: center;
+}
+.lorebook-tag-badge {
+  font-size: 10px;
+  font-weight: 500;
+}
+.lorebook-const-badge {
+  font-size: 9px;
+  color: var(--amber);
+  border: 1px solid var(--amber);
+  border-radius: 3px;
+  padding: 0 3px;
+  line-height: 1.4;
+}
+.lorebook-scoped-badge {
+  font-size: 9px;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  padding: 0 3px;
+  line-height: 1.4;
+  cursor: help;
+}
+.lorebook-archived-badge {
+  font-size: 9px;
+  color: var(--cyan);
+  border: 1px solid var(--cyan);
+  border-radius: 3px;
+  padding: 0 3px;
+  line-height: 1.4;
+  cursor: help;
+}
+.lorebook-off-badge {
+  font-size: 9px;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  border-radius: 3px;
+  padding: 0 3px;
+  line-height: 1.4;
+}
+.lorebook-stats {
+  padding: 6px 8px;
+  border-top: 1px solid var(--surface-border);
+  font-size: 10px;
+  color: var(--muted);
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.lorebook-editor-panel {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  overflow-y: auto;
+  gap: 8px;
+}
+.lorebook-editor-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.lorebook-embedding-card {
+  background: var(--surface2);
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  text-align: center;
+}
+.lorebook-editor-header {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.lorebook-name-input {
+  flex: 1;
+  font-size: 14px !important;
+  font-weight: 600;
+  padding: 6px 10px !important;
+}
+.lorebook-editor-toggles {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.lorebook-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.lorebook-toggle input[type="checkbox"] { width: auto; }
+.lorebook-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.lorebook-field-label {
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 2px;
+}
+.lorebook-content-area {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.lorebook-content-textarea {
+  flex: none;
+  font-size: 12px !important;
+  font-family: var(--font-mono);
+  line-height: 1.5;
+}
+.lorebook-advanced-toggle {
+  font-size: 11px;
+  padding: 4px 0;
+  text-align: left;
+  flex-shrink: 0;
+}
+.lorebook-advanced {
+  background: var(--surface2);
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+  padding: 10px;
+  flex-shrink: 0;
+}
+.lorebook-advanced-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.lorebook-advanced-grid label { font-size: 11px; }
+.lorebook-advanced-grid input,
+.lorebook-advanced-grid select { font-size: 11px !important; padding: 4px 6px !important; }
+.lorebook-advanced-checks {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+.lorebook-editor-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+  /* Pinned to the bottom of the scrolling editor panel so Save is at hand however tall the entry is. */
+  position: sticky;
+  bottom: -12px;
+  margin: 0 -12px -12px;
+  padding: 10px 12px 12px;
+  background: rgba(22, 27, 34, .97);
+  border-top: 1px solid var(--surface-border);
+  z-index: 1;
+}
+.lorebook-import-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1.2rem;
+}
+.lorebook-import-card {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+  padding: 20px;
+  min-width: 300px;
+}
+.lorebook-field-row .auto-textarea { font-size: 12px; }
+/* A stored key or known-by list the text box cannot show exactly. */
+.lorebook-field-note { display: block; margin-top: 2px; font-size: 11px; line-height: 1.35; color: var(--amber); }
+.lorebook-editor-columns { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.lorebook-editor-main { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.lorebook-editor-side { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.lorebook-content-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 2px; }
+.lorebook-content-head .lorebook-field-label { margin-bottom: 0; }
+.lorebook-face-switch { display: inline-flex; border: 1px solid var(--surface-border); border-radius: var(--r-pill); padding: 2px; gap: 2px; }
+.lorebook-face-switch button { min-height: 0; padding: 2px 10px; border: 0; border-radius: var(--r-pill); background: transparent; color: var(--text2); font-size: 10.5px; letter-spacing: .04em; text-transform: uppercase; }
+.lorebook-face-switch button.is-active { background: var(--accent-soft); color: var(--accent); }
+.lorebook-content-textarea.face-prose {
+  font-family: var(--font-sans);
+  font-size: var(--msg-font-size) !important;
+  line-height: 1.7;
+  color: var(--text-prose);
+  max-width: 740px; /* ≈ 90–95 characters of 14.5px DM Sans (measured 121 at 92ch — ch is the digit width) */
+  padding: 12px 16px;
+}
+.lorebook-content-textarea.face-mono { max-width: 110ch; }
+@media (min-width: 1200px) {
+  .lorebook-editor-columns { flex-direction: row; align-items: flex-start; gap: 16px; }
+  .lorebook-editor-main { flex: 0 1 740px; min-width: 0; }
+  .lorebook-editor-side { flex: 1 1 300px; max-width: 460px; min-width: 0; position: sticky; top: 0; }
+  .lorebook-editor-side .lorebook-field-row { grid-template-columns: 1fr; }
+  .lorebook-editor-side .lorebook-advanced-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 1400px) {
+  .lorebook-editor-columns { gap: 20px; }
+  .lorebook-list-panel { width: 320px; }
+}
+.lorebook-info {
+  padding: 6px 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  color: var(--accent);
+  font-size: 12px;
+  cursor: pointer;
+}
+.lorebook-facet-row { display: flex; gap: 4px; padding: 4px 0 0; }
+.lorebook-facet-pill { background: none; border: 1px solid var(--surface-border); border-radius: 999px; color: var(--text2); font-size: 10.5px; padding: 2px 10px; cursor: pointer; }
+.lorebook-offscreen-badge { color: var(--purple, #bc8cff); font-size: 10px; }
+.lorebook-spoiler-wrap { position: relative; cursor: pointer; }
+.lorebook-spoiler-note { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 2; color: var(--purple, #bc8cff); font-size: 12px; }
+.lorebook-content-textarea.spoiler-blur { filter: blur(5px); user-select: none; }
+.lorebook-detail-tabs { margin-bottom: 8px; }
+.lorebook-history-list { list-style: none; padding: 0; margin: 0; }
+.lorebook-history-item { border-bottom: 1px solid var(--surface-border); padding: 8px 0; }
+.lorebook-source-badge { font-size: 10px; padding: 1px 6px; border-radius: 4px; background: var(--surface); border: 1px solid var(--surface-border); color: var(--muted); }
+/* Rebuild embeddings dialog: two choice cards, the explanation visible under each. */
+.lorebook-rebuild-options { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.lorebook-rebuild-option { display: flex; align-items: flex-start; gap: 10px; padding: 8px 10px; border: 1px solid var(--surface-border); border-radius: var(--r-md); cursor: pointer; }
+.lorebook-rebuild-option.active { border-color: var(--accent); background: var(--accent-soft); }
+.lorebook-rebuild-option input { width: auto; margin-top: 3px; flex: none; }
+.lorebook-rebuild-option-text { display: flex; flex-direction: column; gap: 2px; font-size: var(--fs-sm); color: var(--text); }
+.lorebook-rebuild-option-hint { font-size: var(--fs-2xs); color: var(--text2); line-height: 1.4; }
+/* Tracker-owned entries: read-only, with the reason and the way to read them above the editor. */
+.lorebook-readonly-note { margin: 0 0 8px; padding: 8px 10px; border: 1px solid var(--surface-border); border-left: 3px solid var(--accent); border-radius: var(--r-md); background: var(--accent-soft); font-size: var(--fs-xs); color: var(--text2); line-height: 1.45; }
+.lorebook-readonly-note p { margin: 0; }
+.lorebook-readonly-note .lorebook-readonly-title { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; color: var(--text); font-weight: 600; }
+.lorebook-readonly-note code { font-family: var(--font-mono); font-size: 0.95em; color: var(--text); }
+/* Import report: the headline plus every error or warning, collapsible, dismissed explicitly. */
+.lorebook-report { padding: 6px 10px; border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); border-radius: 6px; background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent); font-size: 12px; }
+.lorebook-report-head { display: flex; align-items: center; gap: 8px; }
+.lorebook-report-head > span { flex: 1; min-width: 0; }
+.lorebook-report-close { min-height: 0; padding: 2px 4px; color: var(--text2); }
+.lorebook-report details { margin-top: 4px; color: var(--text2); }
+.lorebook-report summary { cursor: pointer; color: var(--accent); }
+.lorebook-report ul { margin: 4px 0 0; padding-left: 18px; max-height: 180px; overflow-y: auto; line-height: 1.45; }
+.lorebook-report-more { min-height: 0; margin-top: 4px; padding: 2px 6px; font-size: 12px; }
+/* A paged list load that ended short of the total. */
+.lorebook-short-load { display: flex; align-items: center; gap: 8px; margin: 4px 0; padding: 6px 8px; border: 1px solid color-mix(in srgb, var(--amber) 45%, transparent); border-radius: var(--r-sm); background: color-mix(in srgb, var(--amber) 10%, transparent); color: var(--amber); font-size: var(--fs-2xs); line-height: 1.4; }
+.lorebook-short-load span { flex: 1; min-width: 0; }
+.lorebook-short-load .ghost-button { min-height: 0; padding: 2px 8px; font-size: var(--fs-2xs); }
+/* Recently deleted: the campaign's deleted entries, each restorable. */
+.lorebook-deleted { flex: 1; min-height: 0; overflow-y: auto; padding: 10px 14px; }
+.lorebook-deleted-list { list-style: none; margin: 8px 0 0; padding: 0; }
+.lorebook-deleted-item { padding: 8px 0; border-bottom: 1px solid var(--surface-border); }
+.lorebook-deleted-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.lorebook-deleted-name { font-size: var(--fs-sm); color: var(--text); font-weight: 600; }
+.lorebook-deleted-meta { font-size: var(--fs-2xs); flex: 1; min-width: 0; }
+.lorebook-deleted-preview { margin: 4px 0 0; font-size: var(--fs-xs); color: var(--text2); line-height: 1.45; white-space: pre-wrap; word-break: break-word; }

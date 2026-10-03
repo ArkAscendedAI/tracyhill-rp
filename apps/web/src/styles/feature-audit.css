@@ -1,0 +1,25 @@
+/* Split out of base.css (2026-09-24): rules only the lazily loaded audit chunk
+   needs, so the shell's stylesheet stops carrying them. Imported by that feature's entry component; any class the
+   shell itself renders stayed in base.css (checked against the shell's static import graph). */
+.audit-dialog { width: min(96vw, 46rem); max-width: 46rem; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+.audit-dialog h2 { margin: 0; font-size: 15px; }
+.audit-form, .audit-progress, .audit-report { display: flex; flex-direction: column; gap: 10px; }
+.audit-form select { background: var(--surface2, #1c2129); color: var(--text); border: 1px solid var(--surface-border); border-radius: 6px; padding: 4px 8px; font-size: 12.5px; }
+.audit-report details { border: 1px solid var(--surface-border); border-radius: 8px; padding: 6px 10px; }
+.audit-report summary { cursor: pointer; }
+.audit-analysis { white-space: pre-wrap; margin: 6px 0 0; }
+.audit-list { margin: 6px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+.audit-findings-dialog { width: min(96vw, 52rem); max-width: 52rem; }
+.affd-card { border: 1px solid var(--surface-border); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+.affd-head { display: flex; align-items: baseline; gap: 8px; }
+.affd-kind { font-size: 10.5px; border: 1px solid var(--amber, #d29922); color: var(--amber, #d29922); border-radius: 999px; padding: 1px 8px; text-transform: uppercase; letter-spacing: 0.04em; flex-shrink: 0; }
+.affd-detail { margin: 0; white-space: pre-wrap; }
+.affd-reason { margin: 0; font-style: italic; }
+.affd-entries { display: flex; flex-wrap: wrap; gap: 4px; }
+.affd-entry-chip { font-size: 10.5px; border: 1px solid var(--surface-border); border-radius: 999px; padding: 1px 8px; color: var(--text2, var(--muted)); }
+.affd-question { margin: 0; color: var(--amber, #d29922); border: 1px solid var(--amber, #d29922); border-radius: 6px; padding: 5px 8px; background: rgba(210, 153, 34, 0.06); }
+.affd-processing { margin: 0; color: var(--amber, #d29922); }
+.affd-ruling-label { font-size: 11px; color: var(--muted); }
+.affd-ruling { width: 100%; background: var(--surface2, #1c2129); color: var(--text); border: 1px solid var(--surface-border); border-radius: 6px; padding: 6px 8px; font-size: 12.5px; resize: vertical; font-family: inherit; }
+.affd-ruling:focus { outline: none; border-color: var(--accent); }
+.affd-outcome { color: var(--green, #3fb950); }

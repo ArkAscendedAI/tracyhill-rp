@@ -1,0 +1,151 @@
+/* Split out of base.css (2026-09-24): rules only the lazily loaded campaign chunk
+   needs, so the shell's stylesheet stops carrying them. Imported by that feature's entry component; any class the
+   shell itself renders stayed in base.css (checked against the shell's static import graph). */
+.campaign-dialog {
+  width: 100%;
+  height: calc(100vh - 4rem);
+  max-height: calc(100vh - 4rem);
+  display: flex;
+  flex-direction: column;
+}
+.campaign-layout {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+.campaign-list {
+  width: 240px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--surface-border);
+  padding: 12px;
+  overflow-y: auto;
+}
+.campaign-item {
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 4px;
+  border: 1px solid transparent;
+}
+.campaign-item:hover { background: var(--surface2); }
+.campaign-item-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+.campaign-item-meta {
+  font-size: 10px;
+  color: var(--text2);
+  margin-top: 2px;
+}
+.campaign-create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  background: var(--surface2);
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+.campaign-create-form input,
+.campaign-create-form select {
+  font-size: 11px;
+  padding: 4px 6px;
+  background: var(--bg);
+  border: 1px solid var(--surface-border);
+  color: var(--text);
+  border-radius: 4px;
+}
+.campaign-editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  min-width: 0;
+  min-height: 0;
+}
+.campaign-editor-header {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.campaign-name-input {
+  font-size: 14px;
+  font-weight: 600;
+  background: var(--bg);
+  border: 1px solid var(--surface-border);
+  color: var(--text);
+  border-radius: 4px;
+  padding: 4px 8px;
+  flex: 1;
+  min-width: 120px;
+}
+.campaign-tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--surface-border);
+  padding-bottom: 2px;
+}
+.campaign-tab {
+  font-size: 11px;
+  padding: 4px 10px;
+  background: none;
+  border: none;
+  color: var(--text2);
+  cursor: pointer;
+  border-radius: 4px 4px 0 0;
+  font-family: var(--font-mono);
+}
+.campaign-tab:hover { color: var(--text); }
+.campaign-textarea {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--surface-border);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 10px;
+  border-radius: 6px;
+  resize: none;
+  line-height: 1.5;
+  min-height: 0;
+}
+.campaign-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.campaign-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.campaign-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text2);
+  font-size: 13px;
+}
+.campaign-wizard-section {
+  padding: 12px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+.campaign-wizard-section textarea {
+  min-height: 60px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+}
+.campaign-pipeline-section {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

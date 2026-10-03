@@ -1,0 +1,21 @@
+/* Split out of base.css (2026-09-24): rules only the lazily loaded world chunk
+   needs, so the shell's stylesheet stops carrying them. Imported by that feature's entry component; any class the
+   shell itself renders stayed in base.css (checked against the shell's static import graph). */
+.world-dialog { width: min(96vw, 46rem); max-width: 46rem; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+.world-dialog h2 { margin: 0; font-size: 15px; }
+.world-clock-line { margin: 0; }
+.world-tick-form { display: flex; flex-direction: column; gap: 10px; }
+.world-mode { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--surface-border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 12.5px; }
+.world-tick-form input, .world-tick-form select { background: var(--surface2, #1c2129); color: var(--text); border: 1px solid var(--surface-border); border-radius: 6px; padding: 4px 8px; font-size: 12.5px; }
+.world-guidance { width: 100%; background: var(--surface2, #1c2129); color: var(--text); border: 1px solid var(--surface-border); border-radius: 6px; padding: 6px 8px; font-size: 12.5px; resize: vertical; }
+.world-review { display: flex; flex-direction: column; gap: 10px; }
+.world-events { display: flex; flex-direction: column; gap: 10px; }
+.world-event-card { border: 1px solid var(--surface-border); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+.world-event-card.vetoed { opacity: 0.45; }
+.world-chip { font-size: 10.5px; border: 1px solid var(--surface-border); border-radius: 999px; padding: 1px 8px; color: var(--text2); }
+.world-chip.vis-hidden { color: var(--purple, #bc8cff); border-color: var(--purple, #bc8cff); }
+.world-chip.vis-rumored { color: var(--amber, #d29922); border-color: var(--amber, #d29922); }
+.world-chip.vis-observable { color: var(--green, #3fb950); border-color: var(--green, #3fb950); }
+.world-chip.known { color: var(--accent); }
+.world-event-summary { background: var(--surface2, #1c2129); color: var(--text); border: 1px solid var(--surface-border); border-radius: 6px; padding: 4px 8px; font-weight: 600; font-size: 13px; }
+.world-event-detail { background: var(--surface2, #1c2129); color: var(--text); border: 1px solid var(--surface-border); border-radius: 6px; padding: 6px 8px; font-size: 12.5px; resize: vertical; }

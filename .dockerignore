@@ -1,0 +1,22 @@
+# Paths are matched from the build-context root, so every pattern that should also catch nested folders carries
+# `**/`: a bare `data`, `dist`, `.claude` or `test-results` matches only at the root, and a development tree's
+# apps/api/data/v2/session.secret must never reach the image.
+**/node_modules
+**/dist
+**/data
+.git
+# Every .env sibling: the runtime never reads these
+# files (Compose passes .env through env_file), and a backup copy such as
+# .env.bak would carry secrets into the image layers. .env.example is excluded
+# too; it is documentation, not an input.
+**/.env*
+*.md
+# Documentation: no code under apps/ or packages/ reads docs/ at
+# runtime or at build, so none of it belongs in the image.
+docs
+# Host-side deployment files never belong in the image; TLS material is mounted at run time.
+deploy
+certs
+# Never runtime inputs: local tool settings and Playwright output.
+**/.claude
+**/test-results

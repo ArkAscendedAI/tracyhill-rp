@@ -1,0 +1,37 @@
+/* Split out of base.css (2026-09-24): rules only the lazily loaded drives chunk
+   needs, so the shell's stylesheet stops carrying them. Imported by that feature's entry component; any class the
+   shell itself renders stayed in base.css (checked against the shell's static import graph). */
+.drives-want-row .auto-textarea, .drives-conceal .auto-textarea { flex: 1; min-width: 0; }
+.drives-want-row, .drives-conceal { align-items: flex-start; }
+.drives-disp-target { flex: 0 0 130px; }
+.drives-want-row > select { flex: 0 0 auto; width: auto; min-width: 7.5rem; }
+.drives-panel { width: min(96vw, 60rem); max-width: 60rem; height: min(90vh, 52rem); display: flex; flex-direction: column; }
+.drives-header { padding-bottom: 8px; border-bottom: 1px solid var(--surface-border); }
+.drives-header h2 { margin: 0; font-size: 16px; }
+.drives-campaign-select { background: var(--surface2, #1c2129); color: var(--text); border: 1px solid var(--surface-border); border-radius: 6px; padding: 4px 8px; }
+.drives-body { display: grid; grid-template-columns: 220px 1fr; gap: 12px; flex: 1; min-height: 0; margin-top: 10px; }
+.drives-list { border-right: 1px solid var(--surface-border); padding-right: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+.drives-list-row { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; text-align: left; background: none; border: 1px solid transparent; border-radius: 6px; padding: 6px 8px; cursor: pointer; color: var(--text); }
+.drives-list-row:hover { background: var(--surface2, #1c2129); }
+.drives-list-row.is-selected { border-color: var(--accent); background: var(--surface2, #1c2129); }
+.drives-list-name { font-weight: 600; font-size: 13px; }
+.drives-list-sub { font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.drives-new { margin-top: 8px; }
+.drives-new input { flex: 1; min-width: 0; background: var(--surface2, #1c2129); color: var(--text); border: 1px solid var(--surface-border); border-radius: 6px; padding: 4px 6px; }
+.drives-editor { overflow-y: auto; padding-right: 6px; display: flex; flex-direction: column; gap: 12px; }
+.drives-editor-head h3 { margin: 0; }
+.drives-field { display: flex; flex-direction: column; gap: 5px; }
+.drives-field > label { font-size: 12px; font-weight: 600; color: var(--text2); }
+.drives-field input, .drives-field select, .drives-field textarea { background: var(--surface2, #1c2129); color: var(--text); border: 1px solid var(--surface-border); border-radius: 6px; padding: 5px 8px; font-size: 13px; }
+.drives-want-row input, .drives-conceal input { flex: 1; min-width: 0; }
+.drives-conceal { align-items: center; }
+.drives-disp-target { max-width: 130px; color: var(--text2); }
+.drives-pressure { min-width: 20px; text-align: center; font-weight: 700; color: var(--text2); }
+.drives-pressure.p2, .drives-pressure.p3 { color: var(--amber, #d29922); }
+.drives-pressure.p4 { color: var(--danger, #f85149); }
+/* A want on hold: muted, no urgency colour; its pressure holds. */
+.drives-onhold { font-size: 11px; line-height: 1.6; padding: 0 6px; border-radius: 999px; color: var(--muted); background: var(--surface); border: 1px solid var(--surface-border); white-space: nowrap; }
+.drives-save-row { border-top: 1px solid var(--surface-border); padding-top: 10px; margin-top: 4px; }
+.drives-history-row { border-bottom: 1px solid var(--surface-border); padding: 4px 0; }
+.drives-history-head { width: 100%; background: none; border: none; color: var(--text); cursor: pointer; text-align: left; font-size: 12.5px; padding: 4px 0; }
+.drives-history-detail { padding: 6px 0 10px; display: flex; flex-direction: column; gap: 8px; }

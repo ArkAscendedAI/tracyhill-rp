@@ -1,0 +1,11 @@
+-- Owner roll override.
+--
+-- A composer toggle lets the owner declare, per send, that this turn's contested
+-- outcomes resolve in <user>'s favour: the PC's contested action succeeds and
+-- antagonist attempts against the PC fail. The flag lives on the USER message so
+-- every variant of the turn (regenerate, edit-and-regenerate, continue) honours
+-- it identically — the same reason contest rolls are seeded on the user-message
+-- id. Resolution still runs through resolveContested, which stamps the override
+-- into the printed basis trail, so an overridden result stays auditable from the
+-- transcript alone instead of silently bypassing the machinery.
+ALTER TABLE messages ADD COLUMN roll_override INTEGER NOT NULL DEFAULT 0;

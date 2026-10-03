@@ -1,0 +1,192 @@
+x-tracyhill-common: &tracyhill-common
+  build:
+    context: .
+    target: runtime
+  restart: unless-stopped
+  # Optional since 2026-10-01: `docker compose up -d` works on a fresh clone with no .env at all
+  # (every variable has a working default). Copy .env.example to .env to change anything.
+  env_file:
+    - path: .env
+      required: false
+  volumes:
+    - ./data:/app/data
+  # NOTE: this anchor deliberately carries NO
+  # `environment:` block. YAML merge keys are shallow — a service that declares
+  # its own `environment:` REPLACES the anchor's map instead of merging into it,
+  # so per-service env must be listed on the service (both services do). Shared
+  # secrets/values arrive through `env_file` (a top-level key, which does merge).
+  logging:
+    driver: json-file
+    options:
+      max-size: ${DOCKER_LOG_MAX_SIZE:-10m}
+      max-file: "${DOCKER_LOG_MAX_FILE:-5}"
+
+services:
+  # One-shot preparation before the app starts (apps/api/src/deployment/init.ts), run as root and then
+  # gone: hands a fresh ./data bind mount (Docker creates it owned by root) to the app user, creates the
+  # deployment's own random session secret on first boot when SESSION_SECRET is unset (kept in
+  # data/v2/session.secret, never replaced), and writes the runner its derived secret on the small
+  # `secrets` volume, so the runner never holds the session secret. An operator's SESSION_SECRET or
+  # RUNNER_SECRET always wins. No container_name: two instances on one host must not collide.
+  tracyhill-rp-init:
+    <<: *tracyhill-common
+    restart: "no"
+    user: "0:0"
+    command: ["node", "--import", "tsx", "apps/api/src/deployment/initMain.ts"]
+    environment:
+      SESSION_SECRET: ${SESSION_SECRET:-}
+      RUNNER_SECRET: ${RUNNER_SECRET:-}
+      RUNNER_SECRET_FILE: /run/tracyhill-secrets/runner.secret
+    volumes:
+      - ./data:/app/data
+      - secrets:/run/tracyhill-secrets
+
+  tracyhill-rp:
+    <<: *tracyhill-common
+    container_name: tracyhill-rp
+    # Exec form, node as PID 1: `npm run start:api` put npm
+    # at PID 1 with node as a grandchild of `sh -c`; whether SIGTERM reached the
+    # graceful-shutdown handler in apps/api/src/index.ts depended on the image
+    # shell exec-ing the command. Same command as the root package.json script.
+    command: ["node", "--import", "tsx", "apps/api/src/index.ts"]
+    depends_on:
+      tracyhill-rp-init:
+        condition: service_completed_successfully
+    ports:
+      - "${HOST_PORT:-3000}:${PORT:-3000}"
+    environment:
+      NODE_ENV: production
+      PORT: ${PORT:-3000}
+      DB_FILE: ${DB_FILE:-/app/data/v2/tracyhill-rp-v2.sqlite}
+      IMAGE_DIR: ${IMAGE_DIR:-/app/data/v2/images}
+      WEB_DIST_DIR: ${WEB_DIST_DIR:-/app/apps/web/dist}
+      # Blank = the deployment's own secret, generated on first boot by the init service (2026-10-01).
+      SESSION_SECRET: ${SESSION_SECRET:-}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      INLINE_WORKERS: ${INLINE_WORKERS:-0}
+      TRUST_PROXY: ${TRUST_PROXY:-false}
+      ALLOWED_IPS: ${ALLOWED_IPS:-*}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      XAI_API_KEY: ${XAI_API_KEY:-}
+      ZAI_API_KEY: ${ZAI_API_KEY:-}
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY:-}
+      # Blank unless set: email is configured in Admin: Server settings, and a value here wins and shows locked there.
+      EMAIL_FROM: ${EMAIL_FROM:-}
+      EMAIL_FROM_NAME: ${EMAIL_FROM_NAME:-}
+      CLAUDE_CODE_HOST: ${CLAUDE_CODE_HOST:-}
+      CLAUDE_CODE_PORT: ${CLAUDE_CODE_PORT:-7702}
+      CLAUDE_CODE_SECRET: ${CLAUDE_CODE_SECRET:-}
+      CLAUDE_CODE_CA_PATH: ${CLAUDE_CODE_CA_PATH:-}
+      CLAUDE_CODE_SERVERNAME: ${CLAUDE_CODE_SERVERNAME:-claude-agent}
+      CODEX_HOST: ${CODEX_HOST:-}
+      CODEX_PORT: ${CODEX_PORT:-7701}
+      CODEX_SECRET: ${CODEX_SECRET:-}
+      CODEX_CA_PATH: ${CODEX_CA_PATH:-}
+      CODEX_SERVERNAME: ${CODEX_SERVERNAME:-codex-agent}
+      # Subscription runner (the tracyhill-rp-runner service below): the secret is
+      # derived from SESSION_SECRET on both sides unless RUNNER_SECRET is set.
+      RUNNER_URL: ${RUNNER_URL:-http://tracyhill-rp-runner:7710}
+      RUNNER_SECRET: ${RUNNER_SECRET:-}
+      MOCK_PROVIDER: ${MOCK_PROVIDER:-0}
+      SEED_DEMO_USER: ${SEED_DEMO_USER:-0}
+      DEMO_USERNAME: ${DEMO_USERNAME:-demo}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-demo-pass}
+      EXPOSE_AUTH_CODES: ${EXPOSE_AUTH_CODES:-0}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:${PORT:-3000}/api/system/health >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  tracyhill-rp-worker:
+    <<: *tracyhill-common
+    container_name: tracyhill-rp-worker
+    # Exec form, node as PID 1: the worker's shutdown handler (stop
+    # admitting runs, let in-flight runs finish within the grace period) only
+    # runs if SIGTERM reaches node directly. Same command as start:worker.
+    command: ["node", "--import", "tsx", "apps/worker/src/index.ts"]
+    depends_on:
+      tracyhill-rp-init:
+        condition: service_completed_successfully
+    environment:
+      NODE_ENV: production
+      DB_FILE: ${DB_FILE:-/app/data/v2/tracyhill-rp-v2.sqlite}
+      IMAGE_DIR: ${IMAGE_DIR:-/app/data/v2/images}
+      # Blank = the deployment's stored secret (data/v2/session.secret, written by the init service). Listed so a
+      # SESSION_SECRET exported in the shell reaches the worker as it reaches the API and the runner.
+      SESSION_SECRET: ${SESSION_SECRET:-}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      PIPELINE_POLL_MS: ${PIPELINE_POLL_MS:-1000}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      XAI_API_KEY: ${XAI_API_KEY:-}
+      ZAI_API_KEY: ${ZAI_API_KEY:-}
+      RUNNER_URL: ${RUNNER_URL:-http://tracyhill-rp-runner:7710}
+      RUNNER_SECRET: ${RUNNER_SECRET:-}
+      MOCK_PROVIDER: ${MOCK_PROVIDER:-0}
+      # The panel variables (CLAUDE_CODE_*, CODEX_*, KIMI_CODE_*) are API-only; since
+      # 2026-09-25 the worker's subscription paths go through the runner above, so
+      # nothing panel-related is listed here.
+    # Liveness healthcheck: the worker
+    # loop touches its heartbeat file (WORKER_HEARTBEAT_FILE, default
+    # /tmp/worker-heartbeat; read here from the container's own environment, and a
+    # blank value means the default on both sides) every ~15s; a stale mtime means
+    # the poll loop is dead even when the process is technically up.
+    healthcheck:
+      test: ["CMD-SHELL", "[ $$(( $$(date +%s) - $$(stat -c %Y $${WORKER_HEARTBEAT_FILE:-/tmp/worker-heartbeat}) )) -lt 90 ]"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 45s
+
+  # Subscription runner: per-user Claude and ChatGPT sign-ins for the composer.
+  # No published port: only the API and worker reach it over the project network
+  # with the shared secret. It takes an
+  # operator's SESSION_SECRET (to derive that secret) and otherwise reads the
+  # derived secret the init service wrote; nothing else from .env: no provider
+  # keys, no mail secrets. Credential homes live in a named volume the image
+  # initializes with the right ownership; they are never part of the data
+  # directory a backup copies.
+  tracyhill-rp-runner:
+    build:
+      context: .
+      target: runner
+    container_name: tracyhill-rp-runner
+    restart: unless-stopped
+    depends_on:
+      tracyhill-rp-init:
+        condition: service_completed_successfully
+    environment:
+      NODE_ENV: production
+      RUNNER_PORT: "7710"
+      RUNNER_DATA_DIR: /srv/subscriptions
+      RUNNER_SECRET: ${RUNNER_SECRET:-}
+      SESSION_SECRET: ${SESSION_SECRET:-}
+      RUNNER_SECRET_FILE: /run/tracyhill-secrets/runner.secret
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    volumes:
+      - subscriptions:/srv/subscriptions
+      - secrets:/run/tracyhill-secrets:ro
+    mem_limit: ${RUNNER_MEMORY_LIMIT:-3g}
+    logging:
+      driver: json-file
+      options:
+        max-size: ${DOCKER_LOG_MAX_SIZE:-10m}
+        max-file: "${DOCKER_LOG_MAX_FILE:-5}"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:7710/healthz').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  subscriptions:
+  # Holds only the runner's derived secret, written by the init service.
+  secrets:
